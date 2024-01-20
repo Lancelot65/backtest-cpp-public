@@ -1,7 +1,7 @@
 # Documentation principal header backtest.hpp
 
 ## Description
-This file grouping other function of class in [header backtest](#headers%20backtest) in only one class\
+This file grouping other function of class in [header backtest](headers%20backtest) in only one class\
 the class  10 functions : 
 - [open_long](#open_long)
 - [open_short](#open_short)
@@ -21,7 +21,7 @@ the class  10 functions :
 
 <a id="open_long"></a>
 ### `void open_long(int i, double _take_profit, double _stop_loss, double _size);`
-This function is implementation of [this one](headers%20backtest/api.md#constructor_long)
+This function is implementation of [this one](headers%20backtest/position.md#constructor_long)
 #### parameters : 
 - symbol    ("BTCUSDT", "ETHUSDT" ...)
 - timeframe ("1s", "1m", "3m", "5m", "15m", "30m", "1h", "2h", "4h", "6h", "8h", "12h" ,"1d", "3d", "1w", "1M")
