@@ -10,10 +10,9 @@
 
 
 ### To do list 
-- test metrique
 - add backtest.hpp
 
 
 
 #### futur
-I have already UI but i would like improve improve
+I have already UI but i would like improve before push in the public repo

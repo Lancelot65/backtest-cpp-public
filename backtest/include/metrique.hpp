@@ -14,6 +14,4 @@
 
 void _metrique(MEMORY_BACKTEST positions);
 
-
-
 #endif

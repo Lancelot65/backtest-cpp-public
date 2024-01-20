@@ -136,6 +136,11 @@ static void mise_en_page(std::string name, double all, double _long, double _sho
 
 void _metrique(MEMORY_BACKTEST data)
 {
+    if (data.pnl.empty())
+    {
+        std::cout << "memory backtest is empty" << std::endl;
+        return;
+    }
     const double max_drawdawn = *std::max_element(data.evolution_capital.begin(), data.evolution_capital.end()) - *std::min_element(data.evolution_capital.begin(), data.evolution_capital.end());
 
     std::cout << "max drawdawn      " << "\033[0;31m" << max_drawdawn << "\033[0m\n";
@@ -176,85 +181,139 @@ void _metrique(MEMORY_BACKTEST data)
     
     std::cout << "\n\n\n"; //? separation des principales métrique
 
-
-    // pnl du backtest ??
-    const double PnL_Cumulative_all   = sum_vector(data.pnl);
-    const double PnL_Cumulative_long  = sum_vector(data._long);
-    const double PnL_Cumulative_short = sum_vector(data._short);
-
     std::cout << std::setw(25) << std::left << "    ";
     std::cout << std::setw(20) << std::left << "All trades";
     std::cout << std::setw(20) << std::left << "Long";
     std::cout << std::setw(20) << std::left << "short" << "\n\n";
 
+    double PnL_Cumulative_long;
+    double PnL_average_long;
+    double PnL_median_long;
+    double PnL_std_long;
+    double PnL_best_long;
+    double PnL_wrost_long;
+    
+    double Exposure_cumulative_long;
+    double Exposure_average_long;
+    double Exposure_median_long;
+    double Exposure_std_long;
+    
+    double Longest_trade_long;
+    double Shortest_trade_long;
 
+    if (data._long.empty())
+    {
+        PnL_Cumulative_long       = 0;
+        PnL_average_long          = 0;
+        PnL_median_long           = 0;
+        PnL_std_long              = 0;
+        PnL_best_long             = 0;
+        PnL_wrost_long            = 0;
+        
+        Exposure_cumulative_long  = 0;
+        Exposure_average_long     = 0;
+        Exposure_median_long      = 0;
+        Exposure_std_long         = 0;
+        
+        Longest_trade_long        = 0;
+        Shortest_trade_long       = 0;
+
+    }
+    else
+    {
+        PnL_Cumulative_long       = sum_vector(data._long);
+        PnL_average_long          = PnL_Cumulative_long / data._long.size();
+        PnL_median_long           = median(data._long);
+        PnL_std_long              = ecart_type(data._long, PnL_average_long);
+        PnL_best_long             = *std::max_element(data._long.begin(), data._long.end());
+        PnL_wrost_long            = *std::min_element(data._long.begin(), data._long.end());
+        
+        Exposure_cumulative_long  = sum_vector(data.time_long);
+        Exposure_average_long     = Exposure_cumulative_long / data.time_long.size();
+        Exposure_median_long      = median(data.time_long);
+        Exposure_std_long         = ecart_type(data.time_long, Exposure_average_long);
+        
+        Longest_trade_long        = *std::max_element(data.time_long.begin(), data.time_long.end());
+        Shortest_trade_long       = *std::min_element(data.time_long.begin(), data.time_long.end());
+    }
+
+    double PnL_Cumulative_short;
+    double PnL_average_short;
+    double PnL_median_short;
+    double PnL_std_short;
+    double PnL_best_short;
+    double PnL_wrost_short;
+    
+    double Exposure_cumulative_short;
+    double Exposure_average_short;
+    double Exposure_median_short;
+    double Exposure_std_short;
+    
+    double Longest_trade_short;
+    double Shortest_trade_short;
+
+    if (data._short.empty())
+    {
+        PnL_Cumulative_short       = 0;
+        PnL_average_short          = 0;
+        PnL_median_short           = 0;
+        PnL_std_short              = 0;
+        PnL_best_short             = 0;
+        PnL_wrost_short            = 0;
+        
+        Exposure_cumulative_short  = 0;
+        Exposure_average_short     = 0;
+        Exposure_median_short      = 0;
+        Exposure_std_short         = 0;
+        
+        Longest_trade_short        = 0;
+        Shortest_trade_short       = 0;
+
+    }
+    else
+    {
+        PnL_Cumulative_short       = sum_vector(data._short);
+        PnL_average_short          = PnL_Cumulative_short / data._short.size();
+        PnL_median_short           = median(data._short);
+        PnL_std_short              = ecart_type(data._short, PnL_average_short);
+        PnL_best_short             = *std::max_element(data._short.begin(), data._short.end());
+        PnL_wrost_short            = *std::min_element(data._short.begin(), data._short.end());
+        
+        Exposure_cumulative_short  = sum_vector(data.time_short);
+        Exposure_average_short     = Exposure_cumulative_short / data.time_short.size();
+        Exposure_median_short      = median(data.time_short);
+        Exposure_std_short         = ecart_type(data.time_short, Exposure_average_short);
+        
+        Longest_trade_short       = *std::max_element(data.time_short.begin(), data.time_short.end());
+        Shortest_trade_short       = *std::min_element(data.time_short.begin(), data.time_short.end());
+    }
+
+    const double PnL_Cumulative_all      = sum_vector(data.pnl);
+    const double PnL_average_all         = PnL_Cumulative_all / data.pnl.size();
+    const double PnL_median_all          = median(data.pnl);
+    const double PnL_std_all             = ecart_type(data.pnl, PnL_average_all);
+    const double PnL_best_all            = *std::max_element(data.pnl.begin(), data.pnl.end());
+    const double PnL_wrost_all           = *std::min_element(data.pnl.begin(), data.pnl.end());
+    
+    const double Exposure_cumulative_all = sum_vector(data.time_pnl);
+    const double Exposure_average_all    = Exposure_cumulative_all / data.time_pnl.size();
+    const double Exposure_median_all     = median(data.time_pnl);
+    const double Exposure_std_all        = ecart_type(data.time_pnl, Exposure_average_all);
+    
+    const double Longest_trade_all       = *std::max_element(data.time_pnl.begin(), data.time_pnl.end());
+    const double Shortest_trade_all      = *std::min_element(data.time_pnl.begin(), data.time_pnl.end());
 
     mise_en_page("Pnl cumulative", PnL_Cumulative_all, PnL_Cumulative_long, PnL_Cumulative_short);
-
-    const double PnL_average_all   = PnL_Cumulative_all / data.pnl.size();
-    const double PnL_average_long  = PnL_Cumulative_long / data._long.size();
-    const double PnL_average_short = PnL_Cumulative_short / data._short.size();
-
     mise_en_page("Pnl average", PnL_average_all, PnL_average_long, PnL_average_short);
-
-    const double PnL_median_all   = median(data.pnl);
-    const double PnL_median_long  = median(data._long);
-    const double PnL_median_short = median(data._short);
-
     mise_en_page("Pnl median", PnL_median_all, PnL_median_long, PnL_median_short);
-
-    const double PnL_std_all   = ecart_type(data.pnl, PnL_average_all);
-    const double PnL_std_long  = ecart_type(data._long, PnL_average_long);
-    const double PnL_std_short = ecart_type(data._short, PnL_average_short);
-
     mise_en_page("Pnl std", PnL_std_all, PnL_std_long, PnL_std_short, true);
-
-    const double PnL_best_all   = *std::max_element(data.pnl.begin(), data.pnl.end());
-    const double PnL_best_long  = *std::max_element(data._long.begin(), data._long.end());
-    const double PnL_best_short = *std::max_element(data._short.begin(), data._short.end());
-
     mise_en_page("Pnl best", PnL_best_all, PnL_best_long, PnL_best_short);
-
-    const double PnL_wrost_all   = *std::min_element(data.pnl.begin(), data.pnl.end());
-    const double PnL_wrost_long  = *std::min_element(data._long.begin(), data._long.end());
-    const double PnL_wrost_short = *std::min_element(data._short.begin(), data._short.end());
-
     mise_en_page("Pnl wrost", PnL_wrost_all, PnL_wrost_long, PnL_wrost_short);
-
-    const double Exposure_cumulative_all   = sum_vector(data.time_pnl);
-    const double Exposure_cumulative_long  = sum_vector(data.time_long);
-    const double Exposure_cumulative_short = sum_vector(data.time_short);
-
     mise_en_page("Exposure cumulative", Exposure_cumulative_all, Exposure_cumulative_long, Exposure_cumulative_short, true, true);
-
-    const double Exposure_average_all   = Exposure_cumulative_all / data.time_pnl.size();
-    const double Exposure_average_long  = Exposure_cumulative_long / data.time_long.size();
-    const double Exposure_average_short = Exposure_cumulative_short / data.time_short.size();
-
     mise_en_page("Exposure average", Exposure_average_all, Exposure_average_long, Exposure_average_short, true, true);
-    
-    const double Exposure_median_all   = median(data.time_pnl);
-    const double Exposure_median_long  = median(data.time_long);
-    const double Exposure_median_short = median(data.time_short);
-
     mise_en_page("Exposure median", Exposure_median_all, Exposure_median_long, Exposure_median_short, true, true);
-
-    const double Exposure_std_all   = ecart_type(data.time_pnl, Exposure_average_all);
-    const double Exposure_std_long  = ecart_type(data.time_long, Exposure_average_long);
-    const double Exposure_std_short = ecart_type(data.time_short, Exposure_average_short);
-
     mise_en_page("Exposure std", Exposure_std_all, Exposure_std_long, Exposure_std_short, true, true);
-
-    const double Longest_trade_all   = *std::max_element(data.time_pnl.begin(), data.time_pnl.end());
-    const double Longest_trade_long  = *std::max_element(data.time_long.begin(), data.time_long.end());
-    const double Longest_trade_short = *std::max_element(data.time_short.begin(), data.time_short.end());
-
     mise_en_page("Longest trade", Longest_trade_all, Longest_trade_long, Longest_trade_short, true, true);
-
-    const double Shortest_trade_all   = *std::min_element(data.time_pnl.begin(), data.time_pnl.end());
-    const double Shortest_trade_long  = *std::min_element(data.time_long.begin(), data.time_long.end());
-    const double Shortest_trade_short = *std::min_element(data.time_short.begin(), data.time_short.end());
-
     mise_en_page("Shortest trade", Shortest_trade_all, Shortest_trade_long, Shortest_trade_short, true, true);
 
     // faire les fees -> frais
@@ -263,14 +322,101 @@ void _metrique(MEMORY_BACKTEST data)
     
     //? metrique trade gagnant
 
+    double PnL_average_long_win;
+    double PnL_median_long_win;
+    double PnL_std_long_win;
+    double PnL_Cumulative_long_win;
+
+    double Exposure_cumulative_long_win;
+    double Exposure_average_long_win;
+    double Exposure_median_long_win;
+    double Exposure_std_long_win;  
+
+    if (data._long.empty())
+    {
+        PnL_average_long_win          = 0;
+        PnL_median_long_win           = 0;
+        PnL_std_long_win              = 0;
+        PnL_Cumulative_long_win       = 0;
+
+        Exposure_cumulative_long_win  = 0;
+        Exposure_average_long_win     = 0;
+        Exposure_median_long_win      = 0;
+        Exposure_std_long_win         = 0;   
+    }
+    else
+    {
+        std::vector<double> long_win;
+        std::vector<double> long_time_win;
+        for (int i = 0; i < data._long.size(); i++)
+        {
+            if (data._long[i] > 0)
+            {
+                long_win.push_back(data._long[i]);
+                long_time_win.push_back(data.time_long[i]);
+            }
+        }
+        PnL_Cumulative_long_win       = sum_vector(long_win);
+        PnL_average_long_win          = PnL_Cumulative_long_win / long_win.size();
+        PnL_median_long_win           = median(long_win);
+        PnL_std_long_win              = ecart_type(long_win, PnL_average_long_win);
+
+        Exposure_cumulative_long_win  = sum_vector(long_time_win);
+        Exposure_average_long_win     = Exposure_cumulative_long_win / long_time_win.size();
+        Exposure_median_long_win      = median(long_time_win);
+        Exposure_std_long_win         = ecart_type(long_time_win, Exposure_average_long_win);
+
+    }
+
+    double PnL_average_short_win;
+    double PnL_median_short_win;
+    double PnL_std_short_win;
+    double PnL_Cumulative_short_win;
+
+    double Exposure_cumulative_short_win;
+    double Exposure_average_short_win;
+    double Exposure_median_short_win;
+    double Exposure_std_short_win; 
+
+    if (data._short.empty())
+    {
+        PnL_average_short_win          = 0;
+        PnL_median_short_win           = 0;
+        PnL_std_short_win              = 0;
+        PnL_Cumulative_short_win       = 0;
+
+        Exposure_cumulative_short_win  = 0;
+        Exposure_average_short_win     = 0;
+        Exposure_median_short_win      = 0;
+        Exposure_std_short_win         = 0;   
+    }
+    else
+    {
+        std::vector<double> short_win;
+        std::vector<double> short_time_win;
+        for (int i = 0; i < data._short.size(); i++)
+        {
+            if (data._short[i] > 0)
+            {
+                short_win.push_back(data._short[i]);
+                short_time_win.push_back(data.time_short[i]);
+            }
+        }
+        PnL_Cumulative_short_win       = sum_vector(short_win);
+        PnL_average_short_win          = PnL_Cumulative_short_win / short_win.size();
+        PnL_median_short_win           = median(short_win);
+        PnL_std_short_win              = ecart_type(short_win, PnL_average_short_win);
+
+        Exposure_cumulative_short_win  = sum_vector(short_time_win);
+        Exposure_average_short_win     = Exposure_cumulative_short_win / short_time_win.size();
+        Exposure_median_short_win      = median(short_time_win);
+        Exposure_std_short_win         = ecart_type(short_time_win, Exposure_average_short_win);
+
+    }
+
     std::vector<double> all_win;
     std::vector<double> all_time_win;
 
-    std::vector<double> long_win;
-    std::vector<double> long_time_win;
-
-    std::vector<double> short_win;
-    std::vector<double> short_time_win;
 
 
     for (int i = 0; i < data.pnl.size(); i++)
@@ -282,164 +428,145 @@ void _metrique(MEMORY_BACKTEST data)
         }
     }
 
-    for (int i = 0; i < data._long.size(); i++)
-    {
-        if (data._long[i] > 0)
-        {
-            long_win.push_back(data._long[i]);
-            long_time_win.push_back(data.time_long[i]);
-        }
-    }
 
-    for (int i = 0; i < data._short.size(); i++)
-    {
-        if (data._short[i] > 0)
-        {
-            short_win.push_back(data._short[i]);
-            short_time_win.push_back(data.time_short[i]); 
-        }
-    }
-
-
-    const double PnL_Cumulative_all_win   = sum_vector(all_win);
-    const double PnL_Cumulative_long_win  = sum_vector(long_win);
-    const double PnL_Cumulative_short_win = sum_vector(short_win);
+    const double PnL_Cumulative_all_win      = sum_vector(all_win);
+    const double PnL_average_all_win         = PnL_Cumulative_all_win / all_win.size();
+    const double PnL_median_all_win          = median(all_win);
+    const double PnL_std_all_win             = ecart_type(all_win, PnL_average_all_win);
+    const double Exposure_cumulative_all_win = sum_vector(all_time_win);
+    const double Exposure_average_all_win    = Exposure_cumulative_all_win / all_time_win.size();
+    const double Exposure_median_all_win     = median(all_time_win);
+    const double Exposure_std_all_win        = ecart_type(all_time_win, Exposure_average_all_win);
 
     mise_en_page("PnL Cumulative win", PnL_Cumulative_all_win, PnL_Cumulative_long_win, PnL_Cumulative_short_win);
-
-    const double PnL_average_all_win   = PnL_Cumulative_all_win / all_win.size();
-    const double PnL_average_long_win  = PnL_Cumulative_long_win / long_win.size();
-    const double PnL_average_short_win = PnL_Cumulative_short_win / short_win.size();
-
     mise_en_page("PnL average win", PnL_average_all_win, PnL_average_long_win, PnL_average_short_win);
-
-    const double PnL_median_all_win   = median(all_win);
-    const double PnL_median_long_win  = median(long_win);
-    const double PnL_median_short_win = median(short_win);
-
     mise_en_page("Pnl median win", PnL_median_all_win, PnL_median_long_win, PnL_median_short_win);
-
-    const double PnL_std_all_win   = ecart_type(all_win, PnL_average_all_win);
-    const double PnL_std_long_win  = ecart_type(long_win, PnL_average_long_win);
-    const double PnL_std_short_win = ecart_type(short_win, PnL_average_short_win);
-
     mise_en_page("Pnl std win", PnL_std_all_win, PnL_std_long_win, PnL_std_short_win, true);
-    
-
-    const double Exposure_cumulative_all_win   = sum_vector(all_time_win);
-    const double Exposure_cumulative_long_win  = sum_vector(long_time_win);
-    const double Exposure_cumulative_short_win = sum_vector(short_time_win);
-
     mise_en_page("Exposure cumulative win", Exposure_cumulative_all_win, Exposure_cumulative_long_win, Exposure_cumulative_short_win, true, true);
-
-    const double Exposure_average_all_win   = Exposure_cumulative_all_win / all_time_win.size();
-    const double Exposure_average_long_win  = Exposure_cumulative_long_win / long_time_win.size();
-    const double Exposure_average_short_win = Exposure_cumulative_short_win/ short_time_win.size();
-
     mise_en_page("Exposure average win", Exposure_average_all_win, Exposure_average_long_win, Exposure_average_short_win, true, true);
-    
-    const double Exposure_median_all_win   = median(all_time_win);
-    const double Exposure_median_long_win  = median(long_time_win);
-    const double Exposure_median_short_win = median(short_time_win);
-
     mise_en_page("Exposure median win", Exposure_median_all_win, Exposure_median_long_win, Exposure_median_short_win, true, true);
-
-    const double Exposure_std_all_win   = ecart_type(all_time_win, Exposure_average_all_win);
-    const double Exposure_std_long_win  = ecart_type(long_time_win, Exposure_average_long_win);
-    const double Exposure_std_short_win = ecart_type(short_time_win, Exposure_average_short_win);
-
     mise_en_page("Exposure std win", Exposure_std_all_win, Exposure_std_long_win, Exposure_std_short_win, true, true);
-
 
 
     std::cout << "\n\nLosing\n";
     
     //? metrique trade gagnant
 
+    double PnL_Cumulative_long_lose;
+    double PnL_average_long_lose;
+    double PnL_median_long_lose;
+    double PnL_std_long_lose;
+    double Exposure_cumulative_long_lose;
+    double Exposure_average_long_lose;
+    double Exposure_median_long_lose;
+    double Exposure_std_long_lose;
+
+    if (data._long.empty())
+    {
+        PnL_Cumulative_long_lose       = 0;
+        PnL_average_long_lose          = 0;
+        PnL_median_long_lose           = 0;
+        PnL_std_long_lose              = 0;
+        Exposure_cumulative_long_lose  = 0;
+        Exposure_average_long_lose     = 0;
+        Exposure_median_long_lose      = 0;
+        Exposure_std_long_lose         = 0;
+    }
+    else
+    {
+        std::vector<double> long_lose;
+        std::vector<double> long_time_lose;
+        for (int i = 0; i < data._long.size(); i++)
+        {
+            if (data._long[i] < 0)
+            {
+                long_lose.push_back(data._long[i]);
+                long_time_lose.push_back(data.time_long[i]);
+            }
+        }
+        PnL_Cumulative_long_lose       = sum_vector(long_lose);
+        PnL_average_long_lose          = PnL_Cumulative_long_lose / long_lose.size();
+        PnL_median_long_lose           = median(long_lose);
+        PnL_std_long_lose              = ecart_type(long_lose, PnL_average_long_lose);
+
+        Exposure_cumulative_long_lose  = sum_vector(long_time_lose);
+        Exposure_average_long_lose     = Exposure_cumulative_long_lose / long_time_lose.size();
+        Exposure_median_long_lose      = median(long_time_lose);
+        Exposure_std_long_lose         = ecart_type(long_time_lose, Exposure_average_long_lose);
+
+    }
+
+    double PnL_Cumulative_short_lose;
+    double PnL_average_short_lose;
+    double PnL_median_short_lose;
+    double PnL_std_short_lose;
+    double Exposure_cumulative_short_lose;
+    double Exposure_average_short_lose;
+    double Exposure_median_short_lose;
+    double Exposure_std_short_lose; 
+
+    if (data._short.empty())
+    {
+        PnL_Cumulative_short_lose       = 0;
+        PnL_average_short_lose          = 0;
+        PnL_median_short_lose           = 0;
+        PnL_std_short_lose              = 0;
+        Exposure_cumulative_short_lose  = 0;
+        Exposure_average_short_lose     = 0;
+        Exposure_median_short_lose      = 0;
+        Exposure_std_short_lose         = 0;
+    }
+    else
+    {
+        std::vector<double> short_lose;
+        std::vector<double> short_time_lose;
+        for (int i = 0; i < data._short.size(); i++)
+        {
+            if (data._short[i] < 0)
+            {
+                short_lose.push_back(data._short[i]);
+                short_time_lose.push_back(data.time_short[i]);
+            }
+        }
+        PnL_Cumulative_short_lose       = sum_vector(short_lose);
+        PnL_average_short_lose          = PnL_Cumulative_short_lose / short_lose.size();
+        PnL_median_short_lose           = median(short_lose);
+        PnL_std_short_lose              = ecart_type(short_lose, PnL_average_short_lose);
+
+        Exposure_cumulative_short_lose  = sum_vector(short_time_lose);
+        Exposure_average_short_lose     = Exposure_cumulative_short_lose / short_time_lose.size();
+        Exposure_median_short_lose      = median(short_time_lose);
+        Exposure_std_short_lose         = ecart_type(short_time_lose, Exposure_average_short_lose);
+
+    }
+
     std::vector<double> all_lose;
     std::vector<double> all_time_lose;
 
-    std::vector<double> long_lose;
-    std::vector<double> long_time_lose;
-
-    std::vector<double> short_lose;
-    std::vector<double> short_time_lose;
-
-
     for (int i = 0; i < data.pnl.size(); i++)
-    {
-        if (data.pnl[i] < 0)
-        {
-            all_lose.push_back(data.pnl[i]);
-            all_time_lose.push_back(data.time_pnl[i]); 
-        }
-    }
-
-    for (int i = 0; i < data._long.size(); i++)
-    {
-        if (data._long[i] < 0)
-        {
-            long_lose.push_back(data._long[i]);
-            long_time_lose.push_back(data.time_long[i]);
-        }
-    }
-
-    for (int i = 0; i < data._short.size(); i++)
     {
         if (data._short[i] < 0)
         {
-            short_lose.push_back(data._short[i]);
-            short_time_lose.push_back(data.time_short[i]); 
+            all_lose.push_back(data._short[i]);
+            all_time_lose.push_back(data.time_short[i]); 
         }
     }
 
-
     const double PnL_Cumulative_all_lose   = sum_vector(all_lose);
-    const double PnL_Cumulative_long_lose  = sum_vector(long_lose);
-    const double PnL_Cumulative_short_lose = sum_vector(short_lose);
+    const double PnL_average_all_lose   = PnL_Cumulative_all_lose / all_lose.size();
+    const double PnL_median_all_lose   = median(all_lose);
+    const double PnL_std_all_lose   = ecart_type(all_lose, PnL_average_all_lose);
+    const double Exposure_cumulative_all_lose   = sum_vector(all_time_lose);
+    const double Exposure_average_all_lose   = Exposure_cumulative_all_lose / all_time_lose.size();
+    const double Exposure_median_all_lose   = median(all_time_lose);
+    const double Exposure_std_all_lose   = ecart_type(all_time_lose, Exposure_average_all_lose);
 
     mise_en_page("PnL Cumulative lose", PnL_Cumulative_all_lose, PnL_Cumulative_long_lose, PnL_Cumulative_short_lose);
-
-    const double PnL_average_all_lose   = PnL_Cumulative_all_lose / all_lose.size();
-    const double PnL_average_long_lose  = PnL_Cumulative_long_lose / long_lose.size();
-    const double PnL_average_short_lose = PnL_Cumulative_short_lose / short_lose.size();
-
     mise_en_page("PnL average lose", PnL_average_all_lose, PnL_average_long_lose, PnL_average_short_lose);
-
-    const double PnL_median_all_lose   = median(all_lose);
-    const double PnL_median_long_lose  = median(long_lose);
-    const double PnL_median_short_lose = median(short_lose);
-
     mise_en_page("Pnl median lose", PnL_median_all_lose, PnL_median_long_lose, PnL_median_short_lose);
-
-    const double PnL_std_all_lose   = ecart_type(all_lose, PnL_average_all_lose);
-    const double PnL_std_long_lose  = ecart_type(long_lose, PnL_average_long_lose);
-    const double PnL_std_short_lose = ecart_type(short_lose, PnL_average_short_lose);
-
     mise_en_page("Pnl std lose", PnL_std_all_lose, PnL_std_long_lose, PnL_std_short_lose, true);
-    
-
-    const double Exposure_cumulative_all_lose   = sum_vector(all_time_lose);
-    const double Exposure_cumulative_long_lose  = sum_vector(long_time_lose);
-    const double Exposure_cumulative_short_lose = sum_vector(short_time_lose);
-
     mise_en_page("Exposure cumulative lose", Exposure_cumulative_all_lose, Exposure_cumulative_long_lose, Exposure_cumulative_short_lose, true, true);
-
-    const double Exposure_average_all_lose   = Exposure_cumulative_all_lose / all_time_lose.size();
-    const double Exposure_average_long_lose  = Exposure_cumulative_long_lose / long_time_lose.size();
-    const double Exposure_average_short_lose = Exposure_cumulative_short_lose/ short_time_lose.size();
-
     mise_en_page("Exposure average lose", Exposure_average_all_lose, Exposure_average_long_lose, Exposure_average_short_lose, true, true);
-    
-    const double Exposure_median_all_lose   = median(all_time_lose);
-    const double Exposure_median_long_lose  = median(long_time_lose);
-    const double Exposure_median_short_lose = median(short_time_lose);
-
     mise_en_page("Exposure median lose", Exposure_median_all_lose, Exposure_median_long_lose, Exposure_median_short_lose, true, true);
-
-    const double Exposure_std_all_lose   = ecart_type(all_time_lose, Exposure_average_all_lose);
-    const double Exposure_std_long_lose  = ecart_type(long_time_lose, Exposure_average_long_lose);
-    const double Exposure_std_short_lose = ecart_type(short_time_lose, Exposure_average_short_lose);
-
     mise_en_page("Exposure std lose", Exposure_std_all_lose, Exposure_std_long_lose, Exposure_std_short_lose, true, true);
 }
