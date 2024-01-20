@@ -52,7 +52,7 @@ This function return OHLCV crypto data from polygon api : [polygon api doc](http
 int main()
 {
     OHLCV data {};
-    data = forex("C:EURUSD", "hour", "2023-09-01", "2024-09-01", 5, "your_apikey", 200, false);
+    data = forex("C:EURUSD", "hour", "2023-09-01", "2024-09-01", 5, "your_apikey", false);
     return 0;
 }
 ```

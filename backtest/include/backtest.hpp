@@ -33,10 +33,10 @@ public:
     void close_long(int i);
     void close_short(int i);
 
+    void update(int i);
+
     void load_ohlcv_crypto(std::string _symbol, std::string _timeframe, int _limit);
     void load_ohlcv_forex(std::string _symbol, std::string _timeframe, std::string _from, std::string _to, int _multiplicateur, std::string _apikey, bool _adjusted = false);
-
-    void update(int i);
 
     // void performance();
     double return_capital();
