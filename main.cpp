@@ -3,5 +3,6 @@
 
 int main()
 {
+    crypto("BTCUSDT", "1h", 100);
     return 0;
 }
