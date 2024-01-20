@@ -36,15 +36,16 @@ This class is use in backtest for open, manage take profit and stop loss, close 
 
 *fees unvalid*
 
-In this class we have 3 function :
+#### parameter : 
 - [constructor](#constructor_long)
 - [update](#update_long)
 - [fermeture](#fermeture_long)
 
 <a id="constructor_long"></a>
 #### `Position_long(double _close, double _tk, double _sl, double _size, __int64 _time)`
-The constructor init value for futur calculation.\
-The constructor required 5 parameters : 
+The constructor init value for futur calculation.
+
+#### parameter : 
 - _close (double) &#8594; current close
 - _tk (double) &#8594; take profit
 - _sl (double) &#8594; stop loss
@@ -55,14 +56,14 @@ The constructor required 5 parameters :
 #### `bool update(double close)`
 This function check if position touch stop loss or take profit
 
-The function required 1 argument : 
+#### parameter : 
 - close (double) &#8594; current close
 
 <a id="fermeture_long"></a>
 #### `INFO_POSITION fermeture(double close, __int64 time)`
 This function close position, calculate profit and time and return struct INFO_POSITION
 
-The function required 2 arguments : 
+#### parameter : 
 - close (double) &#8594; current close
 - time (__int64) &#8594; current time
 
@@ -96,7 +97,7 @@ This class is use in backtest for open, manage take profit and stop loss, close 
 
 *fees unvalid*
 
-In this class we have 3 function :
+#### parameter : 
 - [constructor](#constructor_short)
 - [update](#update_short)
 - [fermeture](#fermeture_short)
@@ -104,7 +105,8 @@ In this class we have 3 function :
 <a id="constructor_short"></a>
 #### `Position_short(double _close, double _tk, double _sl, double _size, __int64 _time)`
 The constructor init value for futur calculation.\
-The constructor required 5 parameters : 
+
+#### parameter :  
 - _close (double) &#8594; current close
 - _tk (double) &#8594; take profit
 - _sl (double) &#8594; stop loss
@@ -115,14 +117,14 @@ The constructor required 5 parameters :
 #### `bool update(double close)`
 This function check if position touch stop loss or take profit
 
-The function required 1 argument : 
+#### parameter : 
 - close (double) &#8594; current close
 
 <a id="fermeture_short"></a>
 #### `INFO_POSITION fermeture(double close, __int64 time)`
 This function close position, calculate profit and time and return struct INFO_POSITION
 
-The function required 2 arguments : 
+#### parameter : 
 - close (double) &#8594; current close
 - time (__int64) &#8594; current time
 

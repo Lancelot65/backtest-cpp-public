@@ -14,7 +14,7 @@ This file contain 5 function
 
 ## main function
 <a id="ohlcvcrypto"></a>
-### `OHLCV crypto(std::string const symbol, std::string const timeframe, int limit = 200);`
+### `OHLCV crypto(std::string const symbol, std::string const timeframe, int limit = 200)`
 This function return OHLCV crypto data from binance api : [binance api doc](https://docs.binance.us)
 #### parameters : 
 - symbol    ("BTCUSDT", "ETHUSDT" ...)
@@ -34,7 +34,7 @@ int main()
 }
 ```
 <a id="ohlcvforex"></a>
-### `OHLCV forex(std::string const symbol, std::string const timeframe, std::string const from, std::string const to , int const multiplicateur, std::string apikey = std::getenv("cle_api_polygon"), bool adjusted = false);`
+### `OHLCV forex(std::string const symbol, std::string const timeframe, std::string const from, std::string const to , int const multiplicateur, std::string apikey = std::getenv("cle_api_polygon"), bool adjusted = false)`
 This function return OHLCV crypto data from polygon api : [polygon api doc](https://polygon.io/docs/forex/getting-started)
 #### parameters : 
 - symbol    ("C:EURUSD", "C:USDJPY" ...) -> C:symbol
@@ -59,7 +59,7 @@ int main()
 
 ## Secondary function
 <a id="convert_milliseconde_date"></a>
-### `std::vector<std::string> convert_milliseconde_date(std::vector<__int64> &data);`
+### `std::vector<std::string> convert_milliseconde_date(std::vector<__int64> &data)`
 This function convert milliseconde to lisible time in vector.
 #### parameters : 
 - data std::vector with __int64
@@ -81,7 +81,7 @@ int main()
 ```
 
 <a id="get_crypto_symbol"></a>
-### `void get_crypto_symbol(bool exporte = true);`
+### `void get_crypto_symbol(bool exporte = true)`
 This function print or load in file symbol you can use in crypto api.
 #### parameters : 
 - export true : load symbol in file, false print symbol in terminal
@@ -98,7 +98,7 @@ int main()
 ```
 
 <a id="get_forex_symbol"></a>
-### `void get_forex_symbol(bool exporte = true);`
+### `void get_forex_symbol(bool exporte = true)`
 This function print or load in file symbol you can use in forex api.
 #### parameters : 
 - export true : load symbol in file, false print symbol in terminal
