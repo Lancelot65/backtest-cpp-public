@@ -23,9 +23,9 @@ This struct countain 3 variables :
 int main()
 {
     INFO_POSITION info_position {};
-    data.profit = {67,6, -13, 15, -3,7};
-    data.time = {1705399200000, 1706402800000, 1707406400000, 1709410000000};
-    data.low = {1, 2, 1.3, 1};
+    info_position.profit = 67.6;
+    info_position.time = 1705399200000;
+    info_position.fees = 1.2;
     return 0;
 }
 ```
